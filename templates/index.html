@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Stream</title>
+</head>
+<body>
+
+  <img id="video" src="/video" />
+
+  <script>
+    // Get the image element
+    var videoElement = document.getElementById('video');
+
+    // Listen for click events on the video element
+    videoElement.addEventListener('click', function(event) {
+      // Get coordinates
+      var x = event.clientX;
+      var y = event.clientY;
+
+      // Make POST request to server for coordinates
+      fetch('/coordinates', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ x: x, y: y })
+      });
+    });
+    videoElement.addEventListener('mousemove', function(event) {
+      var x = event.clientX;
+      var y = event.clientY;
+      fetch('/mousemove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ x: x, y: y })
+      });
+    });
+
+    // Listen for keydown events on the document
+    document.addEventListener('keydown', function(event) {
+      const key = event.keyCode;
+
+      if (key === 67 || key === 27) {  // 'c' or 'esc'
+        // Make POST request to server for key events
+        const formData = new FormData();
+        formData.append('key', key.toString());
+
+        fetch('/key_event', {
+          method: 'POST',
+          body: formData
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
